@@ -1,0 +1,192 @@
+<%- include('partials/head') %>
+
+<div class="page-wrapper">
+  <%- include('partials/sidebar') %>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1>👤 My Profile</h1>
+      <p>Manage your account and view your achievements</p>
+    </div>
+
+    <% if (typeof query !== 'undefined') { } %>
+
+    <!-- Profile Header -->
+    <div class="card mb-3">
+      <div class="profile-header">
+        <div class="profile-avatar-lg">
+          <%= userProfile.full_name ? userProfile.full_name.charAt(0).toUpperCase() : 'U' %>
+        </div>
+        <div>
+          <h2 style="margin-bottom:4px;"><%= userProfile.full_name %></h2>
+          <p style="color:var(--text-secondary);font-size:0.9rem;">@<%= userProfile.username %> · <%= userProfile.email %></p>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <span class="badge badge-info"><%= userProfile.role %></span>
+            <span class="badge badge-success">Joined <%= new Date(userProfile.created_at).toLocaleDateString() %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon green">✅</div>
+        <div>
+          <div class="stat-value"><%= completedLessons %></div>
+          <div class="stat-label">Lessons Completed</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue">📊</div>
+        <div>
+          <div class="stat-value"><%= overallProgress %>%</div>
+          <div class="stat-label">Overall Progress</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon purple">📝</div>
+        <div>
+          <div class="stat-value"><%= notesCount %></div>
+          <div class="stat-label">Notes Taken</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon yellow">🔖</div>
+        <div>
+          <div class="stat-value"><%= bookmarksCount %></div>
+          <div class="stat-label">Bookmarks</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('settings')">⚙️ Settings</button>
+      <button class="tab" onclick="switchTab('certificates')">🏆 Certificates</button>
+      <button class="tab" onclick="switchTab('security')">🔒 Security</button>
+    </div>
+
+    <!-- Settings Tab -->
+    <div class="tab-content active" id="tab-settings">
+      <div class="card" style="max-width:600px;">
+        <h3 class="mb-2">Edit Profile</h3>
+        <form method="POST" action="/profile/update">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" name="fullName" class="form-input" value="<%= userProfile.full_name %>" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-input" value="<%= userProfile.email %>" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Certificates Tab -->
+    <div class="tab-content" id="tab-certificates">
+      <% if (certificates.length > 0) { %>
+        <div class="chapters-grid">
+          <% certificates.forEach(function(cert) { %>
+            <div class="certificate-card">
+              <div class="certificate-content">
+                <div class="certificate-badge">🏆</div>
+                <h3>Certificate of Completion</h3>
+                <p style="color:var(--text-secondary);margin:8px 0;">
+                  <%= cert.chapter_title || 'Full Course' %>
+                </p>
+                <p style="font-size:0.85rem;color:var(--text-muted);">
+                  Issued: <%= new Date(cert.issued_at).toLocaleDateString() %>
+                </p>
+                <div class="certificate-code">
+                  Code: <%= cert.certificate_code %>
+                </div>
+                <div class="mt-2">
+                  <a href="/certificate/<%= cert.certificate_code %>" target="_blank" class="btn btn-primary btn-sm" style="display:inline-flex;">
+                    🖨️ View & Print Credential
+                  </a>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      <% } %>
+
+      <% if (eligibleChapters.length > 0) { %>
+        <h3 class="mt-3 mb-2">🎉 Eligible for Certificates</h3>
+        <% eligibleChapters.forEach(function(ch) { %>
+          <div class="card mb-2" style="display:flex;align-items:center;justify-content:space-between;">
+            <div>
+              <strong><%= ch.icon %> <%= ch.title %></strong>
+              <p style="font-size:0.85rem;color:var(--text-secondary);">You've completed all lessons!</p>
+            </div>
+            <button class="btn btn-success" onclick="claimCertificate(<%= ch.id %>)">
+              🏆 Claim Certificate
+            </button>
+          </div>
+        <% }); %>
+      <% } %>
+
+      <% if (certificates.length === 0 && eligibleChapters.length === 0) { %>
+        <div class="card">
+          <div class="empty-state">
+            <div class="empty-icon">🏆</div>
+            <p>Complete all lessons in a chapter to earn your first certificate!</p>
+          </div>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Security Tab -->
+    <div class="tab-content" id="tab-security">
+      <div class="card" style="max-width:600px;">
+        <h3 class="mb-2">Change Password</h3>
+        <form method="POST" action="/profile/password">
+          <div class="form-group">
+            <label class="form-label">Current Password</label>
+            <input type="password" name="currentPassword" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input type="password" name="newPassword" class="form-input" minlength="6" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm New Password</label>
+            <input type="password" name="confirmNewPassword" class="form-input" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+function switchTab(tabName) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+  
+  document.getElementById('tab-' + tabName).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function claimCertificate(chapterId) {
+  fetch('/api/certificate/claim', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chapterId })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      alert('🏆 Certificate claimed! Code: ' + data.code);
+      location.reload();
+    }
+  });
+}
+</script>
+
+<%- include('partials/footer') %>
+

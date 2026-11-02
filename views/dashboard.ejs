@@ -1,0 +1,161 @@
+<%- include('partials/head') %>
+
+<div class="page-wrapper">
+  <%- include('partials/sidebar') %>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1>👋 Welcome back, <%= user.fullName.split(' ')[0] %>!</h1>
+      <p>Continue your IT learning journey</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon blue">📊</div>
+        <div>
+          <div class="stat-value"><%= overallProgress %>%</div>
+          <div class="stat-label">Overall Progress</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">✅</div>
+        <div>
+          <div class="stat-value"><%= completedLessons %></div>
+          <div class="stat-label">Completed Lessons</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon purple">📹</div>
+        <div>
+          <div class="stat-value"><%= totalLessons %></div>
+          <div class="stat-label">Total Lessons</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon yellow">🔄</div>
+        <div>
+          <div class="stat-value"><%= inProgressLessons %></div>
+          <div class="stat-label">In Progress</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overall Progress Bar -->
+    <div class="card mb-3">
+      <div class="card-header">
+        <span class="card-title">📈 Course Progress</span>
+        <span class="badge badge-info"><%= completedLessons %>/<%= totalLessons %> lessons</span>
+      </div>
+      <div class="progress-bar" style="height:12px;">
+        <div class="progress-fill" style="width: <%= overallProgress %>%"></div>
+      </div>
+      <div class="progress-text"><%= overallProgress %>% complete</div>
+    </div>
+
+    <!-- Chapters Overview -->
+    <div class="section-header">
+      <h2 class="section-title">📚 Chapters</h2>
+      <a href="/courses" class="btn btn-secondary btn-sm">View All →</a>
+    </div>
+
+    <div class="chapters-grid">
+      <% chapters.forEach(function(ch) { %>
+        <a href="/chapter/<%= ch.id %>" class="chapter-card">
+          <div class="chapter-icon"><%= ch.icon %></div>
+          <h3><%= ch.title %></h3>
+          <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:12px;"><%= ch.description %></p>
+          <div class="chapter-meta">
+            <span>📹 <%= ch.total_lessons %> lessons</span>
+            <span>✅ <%= ch.completed_lessons %> done</span>
+          </div>
+          <div class="progress-bar" style="margin-top:8px;">
+            <div class="progress-fill" style="width: <%= ch.progress_percent %>%"></div>
+          </div>
+          <div class="progress-text"><%= ch.progress_percent %>% complete</div>
+        </a>
+      <% }); %>
+    </div>
+
+    <!-- Quick Learning Actions -->
+    <div class="grid-2 mb-3">
+      <div class="card" style="background:linear-gradient(135deg, rgba(0, 210, 255, 0.08), rgba(124, 77, 255, 0.08));border-color:rgba(0, 210, 255, 0.3);">
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div style="font-size:2.2rem;">💻</div>
+          <div>
+            <h3>Interactive Code Playground</h3>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:8px;">Write, test, and preview HTML, CSS & JavaScript right in your browser.</p>
+            <a href="/playground" class="btn btn-primary btn-sm">Launch Playground →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="background:linear-gradient(135deg, rgba(0, 230, 118, 0.08), rgba(0, 210, 255, 0.08));border-color:rgba(0, 230, 118, 0.3);">
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div style="font-size:2.2rem;">📖</div>
+          <div>
+            <h3>Course Cheatsheets & Guides</h3>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:8px;">Essential reference sheets for JS, HTML/CSS, Agile/Scrum & Terminal CLI.</p>
+            <a href="/resources" class="btn btn-secondary btn-sm">View Resources →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <!-- Recently Watched -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🕐 Recently Watched</span>
+        </div>
+        <% if (recentLessons.length === 0) { %>
+          <div class="empty-state" style="padding:24px;">
+            <div class="empty-icon">📹</div>
+            <p>No lessons watched yet. Start your first lesson!</p>
+          </div>
+        <% } else { %>
+          <% recentLessons.forEach(function(lesson) { %>
+            <a href="/lesson/<%= lesson.id %>" class="recent-item" style="text-decoration:none;color:inherit;">
+              <div class="recent-icon">
+                <%= lesson.status === 'completed' ? '✅' : '▶️' %>
+              </div>
+              <div class="recent-info">
+                <div class="recent-title"><%= lesson.title %></div>
+                <div class="recent-meta"><%= lesson.chapter_title %> · <%= lesson.progress_percent %>%</div>
+              </div>
+              <span class="lesson-status <%= lesson.status %>">
+                <%= lesson.status === 'completed' ? 'Done' : lesson.status === 'in_progress' ? 'Continue' : 'Start' %>
+              </span>
+            </a>
+          <% }); %>
+        <% } %>
+      </div>
+
+      <!-- Bookmarks -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🔖 Bookmarks</span>
+        </div>
+        <% if (bookmarks.length === 0) { %>
+          <div class="empty-state" style="padding:24px;">
+            <div class="empty-icon">🔖</div>
+            <p>No bookmarks yet</p>
+          </div>
+        <% } else { %>
+          <% bookmarks.forEach(function(bm) { %>
+            <a href="/lesson/<%= bm.id %>" class="recent-item" style="text-decoration:none;color:inherit;">
+              <div class="recent-icon">🔖</div>
+              <div class="recent-info">
+                <div class="recent-title"><%= bm.title %></div>
+                <div class="recent-meta"><%= bm.chapter_title %></div>
+              </div>
+            </a>
+          <% }); %>
+        <% } %>
+      </div>
+    </div>
+  </main>
+</div>
+
+<%- include('partials/footer') %>
+

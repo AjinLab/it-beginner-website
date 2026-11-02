@@ -1,0 +1,80 @@
+<!-- Sidebar Navigation -->
+<button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="logo-icon">IT</div>
+    <div class="brand-text">IT <span>Beginner</span></div>
+    <% if (typeof streak !== 'undefined' && streak > 0) { %>
+      <div class="streak-badge" title="<%= streak %> day learning streak!">🔥 <%= streak %>d</div>
+    <% } %>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section">
+      <div class="nav-section-title">Main</div>
+      <a href="/dashboard" class="nav-link <%= currentPath === '/dashboard' ? 'active' : '' %>">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
+      <a href="/courses" class="nav-link <%= currentPath === '/courses' || currentPath.startsWith('/chapter') ? 'active' : '' %>">
+        <span class="nav-icon">📚</span> Course Chapters
+      </a>
+      <a href="/search" class="nav-link <%= currentPath === '/search' ? 'active' : '' %>">
+        <span class="nav-icon">🔍</span> Search & Filter
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">Learning & Practice</div>
+      <a href="/playground" class="nav-link <%= currentPath === '/playground' ? 'active' : '' %>">
+        <span class="nav-icon">💻</span> Code Playground
+      </a>
+      <a href="/resources" class="nav-link <%= currentPath === '/resources' ? 'active' : '' %>">
+        <span class="nav-icon">📖</span> Cheatsheets & Guides
+      </a>
+      <a href="/quizzes" class="nav-link <%= currentPath.startsWith('/quiz') ? 'active' : '' %>">
+        <span class="nav-icon">❓</span> Quizzes
+      </a>
+    </div>
+
+    <% if (user && user.role === 'admin') { %>
+    <div class="nav-section">
+      <div class="nav-section-title">Administration</div>
+      <a href="/admin" class="nav-link <%= currentPath === '/admin' ? 'active' : '' %>">
+        <span class="nav-icon">🛡️</span> Admin Portal
+      </a>
+    </div>
+    <% } %>
+
+    <div class="nav-section">
+      <div class="nav-section-title">Account</div>
+      <a href="/profile" class="nav-link <%= currentPath === '/profile' ? 'active' : '' %>">
+        <span class="nav-icon">👤</span> Profile & Certs
+      </a>
+      <a href="/logout" class="nav-link">
+        <span class="nav-icon">🚪</span> Logout
+      </a>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <% if (user) { %>
+    <a href="/profile" class="user-card">
+      <div class="user-avatar"><%= user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U' %></div>
+      <div class="user-info">
+        <div class="user-name"><%= user.fullName %></div>
+        <div class="user-role"><%= user.role %> <% if (user.role === 'admin') { %>🛡️<% } %></div>
+      </div>
+    </a>
+    <% } %>
+  </div>
+</aside>
+
+<script>
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.querySelector('.sidebar-overlay').classList.toggle('show');
+}
+</script>
+

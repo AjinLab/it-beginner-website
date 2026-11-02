@@ -1,0 +1,109 @@
+<%- include('partials/head') %>
+
+<div class="page-wrapper">
+  <%- include('partials/sidebar') %>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1>🔍 Search & Filter Lessons</h1>
+      <p>Search across all 35 course lessons or filter by chapter and completion status</p>
+    </div>
+
+    <!-- Search Form -->
+    <div class="card mb-3">
+      <form method="GET" action="/search" style="display:flex;gap:12px;flex-wrap:wrap;">
+        <input 
+          type="text" 
+          name="q" 
+          value="<%= q %>" 
+          class="form-input" 
+          placeholder="Search by keywords (e.g. JavaScript, HTML, CSS, Scrum, npm, loops)..." 
+          style="flex:1;min-width:240px;"
+          autofocus
+        >
+        
+        <select name="chapter" class="form-input" style="width:auto;min-width:180px;">
+          <option value="">All Chapters</option>
+          <% chapters.forEach(function(ch) { %>
+            <option value="<%= ch.id %>" <%= chapterId === ch.id ? 'selected' : '' %>>
+              Ch <%= ch.order_index %>: <%= ch.title %>
+            </option>
+          <% }); %>
+        </select>
+
+        <select name="status" class="form-input" style="width:auto;min-width:160px;">
+          <option value="all" <%= statusFilter === 'all' ? 'selected' : '' %>>All Statuses</option>
+          <option value="completed" <%= statusFilter === 'completed' ? 'selected' : '' %>>Completed</option>
+          <option value="in_progress" <%= statusFilter === 'in_progress' ? 'selected' : '' %>>In Progress</option>
+          <option value="not_started" <%= statusFilter === 'not_started' ? 'selected' : '' %>>Not Started</option>
+          <option value="bookmarked" <%= statusFilter === 'bookmarked' ? 'selected' : '' %>>Bookmarked</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">Search</button>
+        <% if (q || chapterId || statusFilter !== 'all') { %>
+          <a href="/search" class="btn btn-secondary">Clear</a>
+        <% } %>
+      </form>
+    </div>
+
+    <!-- Results Header -->
+    <div class="section-header">
+      <h2 class="section-title">
+        <%= totalFound %> <%= totalFound === 1 ? 'Lesson' : 'Lessons' %> Found
+        <% if (q) { %><span style="font-weight:normal;font-size:1rem;color:var(--text-secondary);">for "<%= q %>"</span><% } %>
+      </h2>
+    </div>
+
+    <% if (results.length === 0) { %>
+      <div class="card">
+        <div class="empty-state">
+          <div class="empty-icon">🔎</div>
+          <h3>No lessons matched your criteria</h3>
+          <p>Try different keywords, or clear filters to see all available lessons.</p>
+          <div class="mt-2">
+            <a href="/search" class="btn btn-secondary">Reset Filters</a>
+          </div>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="lesson-list">
+        <% results.forEach(function(lesson) { %>
+          <div class="lesson-item <%= lesson.status %>" style="display:flex;align-items:center;gap:16px;">
+            <div class="lesson-number">
+              <%= lesson.chapter_icon %>
+            </div>
+
+            <div class="lesson-info">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <span style="font-size:0.75rem;color:var(--accent);font-weight:600;"><%= lesson.chapter_title %></span>
+                <% if (lesson.is_bookmarked) { %>
+                  <span style="color:var(--warning);font-size:0.85rem;">🔖 Bookmarked</span>
+                <% } %>
+              </div>
+              <div class="lesson-title"><%= lesson.title %></div>
+              <div class="lesson-desc"><%= lesson.description %></div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
+              <span class="lesson-status <%= lesson.status %>">
+                <% if (lesson.status === 'completed') { %>
+                  ✅ Done
+                <% } else if (lesson.status === 'in_progress') { %>
+                  ▶️ <%= lesson.progress_percent %>%
+                <% } else { %>
+                  ○ Unwatched
+                <% } %>
+              </span>
+              <a href="/lesson/<%= lesson.id %>" class="btn btn-primary btn-sm">
+                Watch →
+              </a>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    <% } %>
+  </main>
+</div>
+
+<%- include('partials/footer') %>
+

@@ -1,0 +1,67 @@
+<%- include('partials/head') %>
+
+<div class="landing-page">
+  <div class="container">
+    <nav class="landing-nav">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div class="logo-icon" style="width:40px;height:40px;background:linear-gradient(135deg,var(--accent),var(--purple));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;color:white;">IT</div>
+        <span style="font-size:1.1rem;font-weight:700;">IT <span style="color:var(--accent)">Beginner</span></span>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <a href="/login" class="btn btn-secondary">Login</a>
+        <a href="/register" class="btn btn-primary">Get Started</a>
+      </div>
+    </nav>
+
+    <section class="landing-hero">
+      <h1>Master IT Fundamentals<br>From Zero to Hero</h1>
+      <p>A comprehensive beginner-friendly course covering software development, web technologies, JavaScript, HTML/CSS, and modern development tools.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="/register" class="btn btn-primary btn-lg">🚀 Start Learning Free</a>
+        <a href="/login" class="btn btn-secondary btn-lg">Already have an account?</a>
+      </div>
+      <div style="margin-top:32px;display:flex;gap:32px;justify-content:center;flex-wrap:wrap;color:var(--text-secondary);font-size:0.9rem;">
+        <span>📹 35 Video Lessons</span>
+        <span>📚 4 Chapters</span>
+        <span>❓ Quiz Assessments</span>
+        <span>🏆 Certificates</span>
+      </div>
+    </section>
+
+    <section class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Structured Learning Path</h3>
+        <p>Follow a carefully designed curriculum from software development basics to building real websites.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📹</div>
+        <h3>Video Lessons</h3>
+        <p>35 high-quality video lessons with progress tracking and note-taking capabilities.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Track Your Progress</h3>
+        <p>See your completion percentage, resume where you left off, and bookmark important lessons.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">❓</div>
+        <h3>Interactive Quizzes</h3>
+        <p>Test your knowledge with chapter quizzes and get instant feedback with explanations.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h3>Notes & Bookmarks</h3>
+        <p>Take timestamped notes during lessons and bookmark videos for quick reference later.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏆</div>
+        <h3>Earn Certificates</h3>
+        <p>Complete chapters to earn certificates of completion with unique verification codes.</p>
+      </div>
+    </section>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
+

@@ -1,0 +1,55 @@
+<%- include('partials/head') %>
+
+<div class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="logo-icon">IT</div>
+        <h1>Create Account</h1>
+        <p>Join and start your IT learning journey</p>
+      </div>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-error">⚠️ <%= error %></div>
+      <% } %>
+
+      <form method="POST" action="/register">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" name="fullName" class="form-input" placeholder="John Doe" required autofocus>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" name="username" class="form-input" placeholder="johndoe" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" name="email" class="form-input" placeholder="you@example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" name="password" class="form-input" placeholder="Min. 6 characters" minlength="6" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          <input type="password" name="confirmPassword" class="form-input" placeholder="Repeat your password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;">
+          🚀 Create Account
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="/login">Sign in</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
+

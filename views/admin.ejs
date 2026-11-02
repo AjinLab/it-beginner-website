@@ -1,0 +1,187 @@
+<%- include('partials/head') %>
+
+<div class="page-wrapper">
+  <%- include('partials/sidebar') %>
+
+  <main class="main-content">
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h1>🛡️ Admin Control Center</h1>
+        <p>Platform monitoring, student progress tracking, and administrative controls</p>
+      </div>
+      <span class="badge badge-warning" style="font-size:0.85rem;padding:6px 12px;">Admin Access Active</span>
+    </div>
+
+    <!-- Metrics Row -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon blue">👥</div>
+        <div>
+          <div class="stat-value"><%= metrics.totalUsers %></div>
+          <div class="stat-label">Total Registered Users</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon green">✅</div>
+        <div>
+          <div class="stat-value"><%= metrics.totalCompletions %></div>
+          <div class="stat-label">Lesson Completions</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon purple">❓</div>
+        <div>
+          <div class="stat-value"><%= metrics.quizPassRate %>%</div>
+          <div class="stat-label">Quiz Success Rate</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon yellow">🏆</div>
+        <div>
+          <div class="stat-value"><%= metrics.totalCertificates %></div>
+          <div class="stat-label">Certificates Issued</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Roster Table -->
+    <div class="card mb-3">
+      <div class="card-header">
+        <h2 class="card-title">👥 Student Roster & Learning Progress</h2>
+        <span class="badge badge-info"><%= students.length %> accounts</span>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="data-table" style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border);text-align:left;color:var(--text-muted);">
+              <th style="padding:12px;">Student</th>
+              <th style="padding:12px;">Email</th>
+              <th style="padding:12px;">Role</th>
+              <th style="padding:12px;">Progress</th>
+              <th style="padding:12px;">Notes</th>
+              <th style="padding:12px;">Joined</th>
+              <th style="padding:12px;text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% students.forEach(function(s) { %>
+              <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                <td style="padding:12px;">
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div class="user-avatar" style="width:32px;height:32px;font-size:0.8rem;">
+                      <%= s.full_name ? s.full_name.charAt(0).toUpperCase() : 'U' %>
+                    </div>
+                    <div>
+                      <strong><%= s.full_name %></strong>
+                      <div style="font-size:0.75rem;color:var(--text-muted);">@<%= s.username %></div>
+                    </div>
+                  </div>
+                </td>
+                <td style="padding:12px;color:var(--text-secondary);"><%= s.email %></td>
+                <td style="padding:12px;">
+                  <span class="badge <%= s.role === 'admin' ? 'badge-warning' : 'badge-info' %>">
+                    <%= s.role %>
+                  </span>
+                </td>
+                <td style="padding:12px;min-width:140px;">
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <div class="progress-bar" style="height:6px;flex:1;">
+                      <div class="progress-fill" style="width:<%= s.progress_percent %>%"></div>
+                    </div>
+                    <span style="font-size:0.75rem;font-weight:600;"><%= s.progress_percent %>%</span>
+                  </div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px;">
+                    <%= s.completed_count %> / <%= metrics.totalLessons %> lessons
+                  </div>
+                </td>
+                <td style="padding:12px;"><%= s.notes_count %></td>
+                <td style="padding:12px;color:var(--text-muted);font-size:0.8rem;">
+                  <%= new Date(s.created_at).toLocaleDateString() %>
+                </td>
+                <td style="padding:12px;text-align:right;">
+                  <% if (s.id !== user.id) { %>
+                    <button class="btn btn-secondary btn-sm" onclick="toggleRole(<%= s.id %>, this)">
+                      Toggle Role
+                    </button>
+                  <% } else { %>
+                    <span style="font-size:0.8rem;color:var(--text-muted);">(You)</span>
+                  <% } %>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Bottom Grids: Popular Lessons & Recent Quizzes -->
+    <div class="grid-2">
+      <!-- Popular Lessons -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">📈 Top Completed Lessons</h2>
+        </div>
+        <div class="lesson-list">
+          <% popularLessons.forEach(function(l) { %>
+            <div class="recent-item">
+              <div class="recent-icon">📹</div>
+              <div class="recent-info">
+                <div class="recent-title"><%= l.title %></div>
+                <div class="recent-meta"><%= l.chapter_title %></div>
+              </div>
+              <span class="badge badge-success"><%= l.completions %> completed</span>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <!-- Recent Quiz Activity -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">🎯 Recent Quiz Submissions</h2>
+        </div>
+        <div>
+          <% recentAttempts.forEach(function(qa) { %>
+            <div class="recent-item">
+              <div class="recent-icon" style="background:<%= qa.is_correct ? 'var(--success-bg)' : 'var(--danger-bg)' %>">
+                <%= qa.is_correct ? '✅' : '❌' %>
+              </div>
+              <div class="recent-info">
+                <div class="recent-title"><%= qa.full_name %> · <%= qa.chapter_title %></div>
+                <div class="recent-meta" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px;">
+                  <%= qa.question %>
+                </div>
+              </div>
+              <span style="font-size:0.75rem;color:var(--text-muted);">
+                <%= new Date(qa.attempted_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>
+              </span>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+function toggleRole(userId, btn) {
+  if (!confirm('Are you sure you want to change this user role?')) return;
+  fetch('/api/admin/toggle-role/' + userId, { method: 'POST' })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        alert('Role changed to: ' + data.newRole);
+        location.reload();
+      } else {
+        alert('Error: ' + data.error);
+      }
+    });
+}
+</script>
+
+<%- include('partials/footer') %>
+

@@ -1,0 +1,132 @@
+<%- include('partials/head') %>
+
+<div class="page-wrapper">
+  <%- include('partials/sidebar') %>
+
+  <main class="main-content">
+    <div class="breadcrumb">
+      <a href="/dashboard">Dashboard</a> / <a href="/courses">Chapters</a> / <span>Quiz: <%= chapter.title %></span>
+    </div>
+
+    <div class="page-header">
+      <h1>❓ Quiz: <%= chapter.title %></h1>
+      <p>Test your knowledge from Chapter <%= chapter.order_index %>. Select the best answer for each question.</p>
+    </div>
+
+    <!-- Quiz Stats -->
+    <div class="stats-grid" style="margin-bottom:24px;">
+      <div class="stat-card">
+        <div class="stat-icon purple">❓</div>
+        <div>
+          <div class="stat-value"><%= totalQuestions %></div>
+          <div class="stat-label">Questions</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">✅</div>
+        <div>
+          <div class="stat-value" id="correctCount"><%= totalCorrect %></div>
+          <div class="stat-label">Correct Answers</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue">📊</div>
+        <div>
+          <div class="stat-value" id="scorePercent"><%= totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0 %>%</div>
+          <div class="stat-label">Score</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Navigation: Other Chapters -->
+    <div class="flex gap-1 mb-3 flex-wrap">
+      <a href="/quiz/1" class="btn btn-sm <%= chapter.id == 1 ? 'btn-primary' : 'btn-secondary' %>">Ch 1: Getting Started</a>
+      <a href="/quiz/2" class="btn btn-sm <%= chapter.id == 2 ? 'btn-primary' : 'btn-secondary' %>">Ch 2: Dev Basics</a>
+      <a href="/quiz/3" class="btn btn-sm <%= chapter.id == 3 ? 'btn-primary' : 'btn-secondary' %>">Ch 3: Web Dev</a>
+      <a href="/quiz/4" class="btn btn-sm <%= chapter.id == 4 ? 'btn-primary' : 'btn-secondary' %>">Ch 4: Frontend & Tools</a>
+    </div>
+
+    <!-- Questions -->
+    <div class="quiz-container">
+      <% if (questions.length === 0) { %>
+        <div class="card">
+          <div class="empty-state">
+            <div class="empty-icon">📝</div>
+            <p>No quiz questions available for this chapter yet. Keep learning!</p>
+          </div>
+        </div>
+      <% } else { %>
+        <% questions.forEach(function(q, i) { %>
+          <div class="question-card fade-in" id="question-<%= q.id %>" style="animation-delay: <%= i * 0.08 %>s">
+            <div class="question-number">Question <%= i + 1 %> of <%= questions.length %></div>
+            <div class="question-text"><%= q.question %></div>
+            <div class="options-grid">
+              <button class="option-btn" onclick="submitAnswer(<%= q.id %>, 'A', this)" data-question="<%= q.id %>">
+                <span class="option-letter">A</span>
+                <span><%= q.option_a %></span>
+              </button>
+              <button class="option-btn" onclick="submitAnswer(<%= q.id %>, 'B', this)" data-question="<%= q.id %>">
+                <span class="option-letter">B</span>
+                <span><%= q.option_b %></span>
+              </button>
+              <button class="option-btn" onclick="submitAnswer(<%= q.id %>, 'C', this)" data-question="<%= q.id %>">
+                <span class="option-letter">C</span>
+                <span><%= q.option_c %></span>
+              </button>
+              <button class="option-btn" onclick="submitAnswer(<%= q.id %>, 'D', this)" data-question="<%= q.id %>">
+                <span class="option-letter">D</span>
+                <span><%= q.option_d %></span>
+              </button>
+            </div>
+            <div class="explanation" id="explanation-<%= q.id %>"></div>
+          </div>
+        <% }); %>
+      <% } %>
+    </div>
+  </main>
+</div>
+
+<script>
+let correctCount = <%= totalCorrect %>;
+const totalQuestions = <%= totalQuestions %>;
+
+function submitAnswer(questionId, selectedOption, btnEl) {
+  // Disable all options for this question
+  const buttons = document.querySelectorAll('[data-question="' + questionId + '"]');
+  buttons.forEach(b => b.classList.add('disabled'));
+
+  fetch('/api/quiz/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ questionId, selectedOption })
+  })
+  .then(r => r.json())
+  .then(data => {
+    // Highlight correct/incorrect
+    buttons.forEach(b => {
+      const letter = b.querySelector('.option-letter').textContent;
+      if (letter === data.correctOption) {
+        b.classList.add('correct');
+      } else if (letter === selectedOption && !data.isCorrect) {
+        b.classList.add('incorrect');
+      }
+    });
+
+    // Show explanation
+    const expEl = document.getElementById('explanation-' + questionId);
+    expEl.innerHTML = (data.isCorrect ? '✅ Correct! ' : '❌ Incorrect. ') + data.explanation;
+    expEl.classList.add('show');
+
+    // Update stats
+    if (data.isCorrect) {
+      correctCount++;
+      document.getElementById('correctCount').textContent = correctCount;
+      document.getElementById('scorePercent').textContent = 
+        Math.round((correctCount / totalQuestions) * 100) + '%';
+    }
+  });
+}
+</script>
+
+<%- include('partials/footer') %>
+

@@ -1,0 +1,38 @@
+<%- include('partials/head') %>
+
+<div class="page-wrapper">
+  <%- include('partials/sidebar') %>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1>📚 Course Chapters</h1>
+      <p>Explore all chapters and track your progress through the IT Beginner course</p>
+    </div>
+
+    <div class="chapters-grid">
+      <% chapters.forEach(function(ch, index) { %>
+        <a href="/chapter/<%= ch.id %>" class="chapter-card fade-in" style="animation-delay: <%= index * 0.1 %>s">
+          <div class="chapter-icon"><%= ch.icon %></div>
+          <h3>Chapter <%= ch.order_index %>: <%= ch.title %></h3>
+          <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:12px;"><%= ch.description %></p>
+          <div class="chapter-meta">
+            <span>📹 <%= ch.lesson_count %> lessons</span>
+            <span>✅ <%= ch.completed_lessons %> completed</span>
+          </div>
+          <div class="progress-bar" style="margin-top:12px;">
+            <div class="progress-fill" style="width: <%= ch.progress_percent %>%"></div>
+          </div>
+          <div class="progress-text">
+            <%= ch.progress_percent %>% complete
+            <% if (ch.progress_percent === 100) { %>
+              · <span class="text-success">🏆 Completed!</span>
+            <% } %>
+          </div>
+        </a>
+      <% }); %>
+    </div>
+  </main>
+</div>
+
+<%- include('partials/footer') %>
+

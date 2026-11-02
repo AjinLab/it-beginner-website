@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificate of Completion - <%= cert.full_name %> | IT Beginner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .cert-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      background: radial-gradient(circle at center, #1a1a36 0%, #0d0d1a 100%);
+    }
+
+    .cert-frame {
+      width: 100%;
+      max-width: 900px;
+      background: #0f1123;
+      border: 12px double #00d2ff;
+      border-radius: 16px;
+      padding: 48px 40px;
+      text-align: center;
+      box-shadow: 0 16px 60px rgba(0, 210, 255, 0.2);
+      position: relative;
+    }
+
+    .cert-header {
+      font-family: 'Cinzel', serif;
+      letter-spacing: 4px;
+      color: #00d2ff;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .cert-main-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .cert-subtitle {
+      font-size: 1rem;
+      color: #a0a0b8;
+      margin-bottom: 16px;
+    }
+
+    .cert-name {
+      font-family: 'Cinzel', serif;
+      font-size: 2.75rem;
+      color: #00e676;
+      font-weight: 700;
+      margin: 16px 0;
+      text-decoration: underline;
+      text-underline-offset: 8px;
+    }
+
+    .cert-details {
+      max-width: 650px;
+      margin: 20px auto 32px;
+      font-size: 1.05rem;
+      color: #c0c0d8;
+      line-height: 1.6;
+    }
+
+    .cert-footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .cert-seal {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ffd700, #ffaa00);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      box-shadow: 0 0 24px rgba(255, 215, 0, 0.4);
+      margin: 0 auto;
+    }
+
+    .cert-code {
+      font-family: monospace;
+      font-size: 0.9rem;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid #00d2ff;
+      color: #00d2ff;
+      padding: 6px 14px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-top: 6px;
+    }
+
+    @media print {
+      body {
+        background: #fff !important;
+        color: #000 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .cert-page {
+        padding: 0;
+        background: none;
+      }
+      .cert-frame {
+        border: 10px double #333;
+        box-shadow: none;
+        max-width: 100%;
+        color: #000;
+        background: #fff;
+      }
+      .cert-header, .cert-main-title {
+        color: #000;
+      }
+      .cert-name {
+        color: #0066cc;
+      }
+      .cert-details {
+        color: #333;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cert-page">
+  <div class="no-print" style="margin-bottom:24px;display:flex;gap:12px;">
+    <button onclick="window.print()" class="btn btn-primary btn-lg">🖨️ Print / Save as PDF</button>
+    <a href="/dashboard" class="btn btn-secondary btn-lg">← Back to Dashboard</a>
+  </div>
+
+  <div class="cert-frame">
+    <div class="cert-header">IT Beginner Academy · Official Credential</div>
+    <div class="cert-main-title">Certificate of Completion</div>
+
+    <div class="cert-subtitle">This is proudly presented to</div>
+    <div class="cert-name"><%= cert.full_name %></div>
+
+    <div class="cert-details">
+      For successfully mastering and demonstrating proficiency in 
+      <strong><%= cert.chapter_title ? cert.chapter_title : 'Full IT Beginner Course Curriculum' %></strong>,
+      covering modern web development principles, software engineering workflows, JavaScript programming, and command line tools.
+    </div>
+
+    <div class="cert-seal">🏆</div>
+
+    <div class="cert-footer-row">
+      <div style="text-align:left;">
+        <div style="font-size:0.85rem;color:#a0a0b8;">Verified Issue Date</div>
+        <strong><%= new Date(cert.issued_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></strong>
+      </div>
+
+      <div>
+        <div style="font-size:0.8rem;color:#a0a0b8;">Credential Verification ID</div>
+        <div class="cert-code"><%= cert.certificate_code %></div>
+      </div>
+
+      <div style="text-align:right;">
+        <div style="font-size:0.85rem;color:#a0a0b8;">Verified By</div>
+        <strong>IT Beginner Course Team</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+

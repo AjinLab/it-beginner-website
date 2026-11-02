@@ -1,0 +1,72 @@
+<%- include('partials/head') %>
+
+<div class="page-wrapper">
+  <%- include('partials/sidebar') %>
+
+  <main class="main-content">
+    <div class="breadcrumb">
+      <a href="/dashboard">Dashboard</a> / <a href="/courses">Chapters</a> / <span><%= chapter.title %></span>
+    </div>
+
+    <div class="page-header">
+      <h1><%= chapter.icon %> Chapter <%= chapter.order_index %>: <%= chapter.title %></h1>
+      <p><%= chapter.description %></p>
+    </div>
+
+    <!-- Chapter Progress -->
+    <div class="card mb-3">
+      <div class="card-header">
+        <span class="card-title">Chapter Progress</span>
+        <span class="badge badge-info"><%= completedCount %>/<%= lessons.length %> lessons</span>
+      </div>
+      <div class="progress-bar" style="height:10px;">
+        <div class="progress-fill" style="width: <%= progressPercent %>%"></div>
+      </div>
+      <div class="progress-text" style="display:flex;justify-content:space-between;">
+        <span><%= progressPercent %>% complete</span>
+        <% if (progressPercent === 100) { %>
+          <a href="/quiz/<%= chapter.id %>" class="btn btn-success btn-sm">🏆 Take Quiz</a>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Lesson List -->
+    <div class="section-header">
+      <h2 class="section-title">Lessons</h2>
+    </div>
+
+    <ul class="lesson-list">
+      <% lessons.forEach(function(lesson, i) { %>
+        <a href="/lesson/<%= lesson.id %>" class="lesson-item <%= lesson.progress.status %> fade-in" style="animation-delay: <%= i * 0.05 %>s">
+          <div class="lesson-number">
+            <% if (lesson.progress.status === 'completed') { %>✓<% } else { %><%= i + 1 %><% } %>
+          </div>
+          <div class="lesson-info">
+            <div class="lesson-title"><%= lesson.title %></div>
+            <div class="lesson-desc"><%= lesson.description %></div>
+          </div>
+          <% if (lesson.is_bookmarked) { %>
+            <span style="color:var(--warning);font-size:1rem;">🔖</span>
+          <% } %>
+          <span class="lesson-status <%= lesson.progress.status %>">
+            <% if (lesson.progress.status === 'completed') { %>
+              ✅ Completed
+            <% } else if (lesson.progress.status === 'in_progress') { %>
+              ▶️ <%= lesson.progress.progress_percent %>%
+            <% } else { %>
+              ○ Not Started
+            <% } %>
+          </span>
+        </a>
+      <% }); %>
+    </ul>
+
+    <!-- Quiz Link -->
+    <div class="mt-3 text-center">
+      <a href="/quiz/<%= chapter.id %>" class="btn btn-primary btn-lg">❓ Take Chapter Quiz</a>
+    </div>
+  </main>
+</div>
+
+<%- include('partials/footer') %>
+

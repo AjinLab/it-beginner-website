@@ -1,0 +1,220 @@
+<%- include('partials/head') %>
+
+<div class="page-wrapper">
+  <%- include('partials/sidebar') %>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1>📖 Course Resources & Cheatsheets</h1>
+      <p>Quick reference guides and cheat sheets covering every topic taught in the IT Beginner course</p>
+    </div>
+
+    <!-- Quick navigation pills -->
+    <div class="flex gap-1 mb-3 flex-wrap">
+      <a href="#javascript" class="btn btn-secondary btn-sm">⚡ JavaScript</a>
+      <a href="#html-css" class="btn btn-secondary btn-sm">🌐 HTML & CSS</a>
+      <a href="#agile-scrum" class="btn btn-secondary btn-sm">⚙️ Agile & Scrum</a>
+      <a href="#cli-npm" class="btn btn-secondary btn-sm">💻 CLI & NPM</a>
+      <a href="#devtools" class="btn btn-secondary btn-sm">🛠️ Dev Tools</a>
+    </div>
+
+    <!-- Section 1: JavaScript -->
+    <section id="javascript" class="card mb-3">
+      <div class="card-header">
+        <h2 style="font-size:1.3rem;">⚡ JavaScript Fundamentals Cheat Sheet</h2>
+        <span class="badge badge-info">Chapter 3</span>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <h4>Variables & Declaration</h4>
+          <pre class="code-block"><code>// const: cannot be reassigned (preferred)
+const pi = 3.14159;
+
+// let: can be reassigned
+let counter = 0;
+counter += 1;
+
+// Data Types
+let name = "Alex";       // String
+let age = 24;            // Number
+let isLearning = true;   // Boolean
+let emptyVal = null;     // Null
+let notDefined;          // Undefined</code></pre>
+        </div>
+
+        <div>
+          <h4>Conditionals & Operators</h4>
+          <pre class="code-block"><code>// Strict equality vs loose equality
+5 === 5;   // true (same value & type)
+5 === "5"; // false
+5 == "5";  // true (type coercion - avoid!)
+
+if (score >= 90) {
+  console.log("Grade A");
+} else if (score >= 75) {
+  console.log("Grade B");
+} else {
+  console.log("Needs Practice");
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="grid-2 mt-2">
+        <div>
+          <h4>Arrays & Common Methods</h4>
+          <pre class="code-block"><code>const fruits = ["Apple", "Banana", "Cherry"];
+
+fruits.push("Mango");    // Add to end
+fruits.pop();            // Remove last
+fruits.length;           // Total items: 3
+
+// Loop with forEach
+fruits.forEach((fruit, i) => {
+  console.log(i + ": " + fruit);
+});</code></pre>
+        </div>
+
+        <div>
+          <h4>Objects & Functions</h4>
+          <pre class="code-block"><code>// JavaScript Object
+const student = {
+  name: "Jordan",
+  course: "IT Beginner",
+  progress: 85,
+  greet: function() {
+    return "Hi, I am " + this.name;
+  }
+};
+
+// Function declaration
+function calculateSum(a, b) {
+  return a + b;
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: HTML & CSS -->
+    <section id="html-css" class="card mb-3">
+      <div class="card-header">
+        <h2 style="font-size:1.3rem;">🌐 HTML5 & CSS3 Quick Reference</h2>
+        <span class="badge badge-info">Chapter 3</span>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <h4>Semantic HTML5 Structure</h4>
+          <pre class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;My Web Page&lt;/title&gt;
+    &lt;link rel="stylesheet" href="style.css"&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;header&gt;&lt;nav&gt;Navigation&lt;/nav&gt;&lt;/header&gt;
+    &lt;main&gt;
+      &lt;article&gt;Content&lt;/article&gt;
+    &lt;/main&gt;
+    &lt;footer&gt;Copyright 2026&lt;/footer&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+        </div>
+
+        <div>
+          <h4>CSS Flexbox Layout Basics</h4>
+          <pre class="code-block"><code>.container {
+  display: flex;
+  justify-content: center; /* Horiz axis */
+  align-items: center;     /* Vert axis */
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* CSS Box Model */
+.box {
+  width: 200px;
+  padding: 16px;          /* Inside space */
+  border: 2px solid #333; /* Boundary */
+  margin: 12px;           /* Outside space */
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Agile & Scrum -->
+    <section id="agile-scrum" class="card mb-3">
+      <div class="card-header">
+        <h2 style="font-size:1.3rem;">⚙️ Agile & Scrum Methodology</h2>
+        <span class="badge badge-info">Chapter 2</span>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <h4>The 4 Core Agile Values</h4>
+          <ul style="padding-left:20px;margin-top:8px;line-height:1.8;color:var(--text-secondary);">
+            <li><strong>Individuals and interactions</strong> over processes and tools</li>
+            <li><strong>Working software</strong> over comprehensive documentation</li>
+            <li><strong>Customer collaboration</strong> over contract negotiation</li>
+            <li><strong>Responding to change</strong> over following a rigid plan</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Scrum Ceremonies</h4>
+          <ul style="padding-left:20px;margin-top:8px;line-height:1.8;color:var(--text-secondary);">
+            <li><strong>Sprint Planning:</strong> Select backlog items for the upcoming sprint</li>
+            <li><strong>Daily Standup:</strong> 15-min sync (Yesterday, Today, Blockers)</li>
+            <li><strong>Sprint Review:</strong> Demo finished work to stakeholders</li>
+            <li><strong>Sprint Retrospective:</strong> Reflect on team process and improvements</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: CLI & NPM -->
+    <section id="cli-npm" class="card mb-3">
+      <div class="card-header">
+        <h2 style="font-size:1.3rem;">💻 Command Line (CLI) & NPM Handbook</h2>
+        <span class="badge badge-info">Chapter 4</span>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <h4>Essential Terminal Commands</h4>
+          <pre class="code-block"><code>pwd         # Print current directory
+ls -la      # List files with details
+cd my-folder# Change directory
+cd ..       # Go up one folder
+mkdir app   # Create new directory
+touch file  # Create empty file
+rm -rf dir  # Remove directory (caution!)</code></pre>
+        </div>
+
+        <div>
+          <h4>NPM Commands</h4>
+          <pre class="code-block"><code>npm init -y        # Init new package.json
+npm install express# Install dependency
+npm install -D nodemon # Dev dependency
+npm run dev        # Run script from package.json
+npm list           # View installed packages
+npm update         # Update dependencies</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Practice CTA -->
+    <div class="card text-center" style="padding:32px;">
+      <h3>Ready to practice what you've learned?</h3>
+      <p style="color:var(--text-secondary);margin:8px 0 16px;">Test your knowledge with chapter quizzes or write live code in the playground!</p>
+      <div class="flex-center gap-2">
+        <a href="/playground" class="btn btn-primary">💻 Open Code Playground</a>
+        <a href="/quizzes" class="btn btn-secondary">❓ Take Chapter Quizzes</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<%- include('partials/footer') %>
+
